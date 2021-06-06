@@ -1,0 +1,183 @@
+<?php
+include 'config.php';
+  session_start();
+  if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
+	{
+		header("location: signin.php");
+	}
+	$id=$_SESSION['id'];
+	$query=mysqli_query($conn,"SELECT * FROM users where id='$id'")or die(mysqli_error());
+	$row= mysqli_fetch_array($query);
+	
+
+	$user_id = $row['id'];
+
+
+
+
+
+
+$property_name = $location =$area =$pincode =$price = "";
+$property_name_err =   "";
+
+	
+
+
+if ($_SERVER['REQUEST_METHOD'] == "POST"){
+
+    // Check if property_name is empty
+    if(empty(trim($_POST["property_name"]))){
+        $property_name_err = "property_name cannot be blank";
+    }
+    else{
+        $sql = "SELECT property_id FROM property WHERE property_name = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        if($stmt)
+        {
+            mysqli_stmt_bind_param($stmt, "s", $param_property_name);
+
+            // Set the value of param property_name
+            $param_property_name = trim($_POST['property_name']);
+
+            // Try to execute this statement
+            if(mysqli_stmt_execute($stmt)){
+                mysqli_stmt_store_result($stmt);
+                if(mysqli_stmt_num_rows($stmt) == 1)
+                {
+                    $property_name_err = "This property_name is already taken";
+                    echo"This property_name is already taken";
+
+                }
+                else{
+                    $property_name = trim($_POST['property_name']);
+                }
+            }
+            else{
+                echo "Something went wrong";
+            }
+        }
+    }
+
+    mysqli_stmt_close($stmt);
+
+
+
+    $location = trim($_POST['location']);
+    $area = trim($_POST['area']);
+    $pincode = trim($_POST['pincode']);
+    $price = trim($_POST['price']);
+
+
+
+
+// If there were no errors, go ahead and insert into the database
+if(empty($property_name_err)  )
+{
+    $sql = "INSERT INTO property (property_name, location, area, price, pincode, user_id) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $sql);
+    if ($stmt)
+    {
+        mysqli_stmt_bind_param($stmt, "ssssss", $param_property_name, $param_location, $param_area, $param_pincode, $param_price, $param_user_id);
+
+        // Set these parameters
+        $param_property_name = $property_name;
+        $param_location = $location;
+        $param_area = $area;
+        $param_pincode = $pincode;
+        $param_price = $price;
+		$param_user_id = $user_id;
+
+        // Try to execute the query
+        if (mysqli_stmt_execute($stmt))
+        {
+            header("location: profile.php");
+        }
+        else{
+            echo "Something went wrong... cannot redirect!";
+        }
+    }
+    mysqli_stmt_close($stmt);
+}
+mysqli_close($conn);
+}
+
+?>
+
+
+
+<?php
+// Delimiters may be slash, dot, or hyphen
+$date = "04/30/1973";
+list($month, $day, $year) = split('[/.-]', $date);
+echo "Month: $month; Day: $day; Year: $year<br />\n";
+?>
+$amenities = 'test 1; test 2; test 3';
+$strArr = explode(";", $amenities);
+
+
+foreach ($strArr as $key => $value) {
+      $sql = mysqli_query($conn,"INSERT into amenity (property_id,amenities)values('', '$value')")or die(mysqli_error());
+      
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>PROPERTY MANAGEMENT SYSTEM</title>
+	<link rel="stylesheet" href="s1.css">
+</head>
+<body>
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+    <h2 class="inactive underlineHover"><a href=""><?php echo $row['name']; ?></a></h2>
+    <h2 class="active"> Register Property</h2>
+
+    <!-- Icon -->
+
+
+    <!-- Login Form -->
+    <form action="" method="post">
+	  <input type="text" id="property_name" class="fadeIn second" name="property_name" placeholder="Property Name" required>
+      <input type="text" id="area" class="fadeIn third" name="area" placeholder="area"  required >
+      <input type="text" id="BHK" class="fadeIn second" name="bhk" placeholder="BHK" required>
+      <input type="text" id="category" class="fadeIn second" name="category" placeholder="Category" required>
+      <input type="text" id="price" class="fadeIn second" name="price" placeholder="Price" required>
+      <input type="text" id="location" class="fadeIn second" name="location" placeholder="Location" required>
+      <input type="text" id="pincode" class="fadeIn second" name="pincode" placeholder="Pincode" required>
+      <input type="text" id="city" class="fadeIn second" name="city" placeholder="City" required>
+      <input type="text" id="state" class="fadeIn second" name="state" placeholder="State" required>
+
+
+
+      <button type="submit" class="fadeIn fourth" value="Register">Register</button>
+    </form>
+
+    <div id="formFooter">
+       <p><a class="underlineHover" href="welcome.php">Cancel</a>.</p>
+
+    </div>
+
+
+  </div>
+</div>
+</body>
+</html>

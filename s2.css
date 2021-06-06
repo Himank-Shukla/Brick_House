@@ -1,0 +1,16 @@
+body {
+	background:url('slide-3.jpg');
+	background-size:cover;
+	background-repeat: no-repeat;
+	opacity:0.5;
+}
+.container {
+	color:white;position: absolute;
+	left:30%;
+	top:30%;
+
+}
+.btn-primary {
+    color: #fff;
+    background-color: #2eca6a;
+    border-color: #04a40e;#2eca6a#2eca6a#2eca6a#2eca6a#2eca6a#2eca6a#2eca6a#2eca6a
