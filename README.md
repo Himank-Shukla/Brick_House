@@ -1,5 +1,5 @@
 # Brick_House
-# Brick_House
+# Property Management System
 1. INTRODUCTION:
 This is an era of computer and information technology. In this era, if you want to exist in the
 market, you have to use computer and information to provide best services to the customer.
